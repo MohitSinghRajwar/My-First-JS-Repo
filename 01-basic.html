@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic 01</title>
+
+    <style>
+    .flex-container {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+    .flex-container > div {
+        width: 100px;
+        margin: 10px;
+        text-align: center;
+        line-height: 75px;
+        font-size: 30px;
+    }
+    </style>    
+</head>
+<body>
+    <h1>Changing Background Color Randomly</h1>
+    <button id="btnStart">Start</button>
+    <button id="btnStop">Stop</button>
+    
+    <br>
+
+    <h1>Changing Background Color Onclick</h1>
+    <div class="flex-container">
+        <div data-color="red" style="background-color: red;">Red</div>
+        <div data-color="green" style="background-color: green;">Green</div>
+        <div data-color="blue" style="background-color: blue;">Blue</div>
+    </div>
+
+    <br>
+    <h1>Digital Clock</h1>
+    <div id="clock" style="width: 250px; background-color: orange; vertical-align: middle; text-align: center; line-height: 50px; font-size: 25px;"></div>
+
+    <br>
+    <h1>Counter increase/Decrease</h1>
+    <button id="increase"> + </button>
+    <input id="number" type="number" value="0">
+    <button id="decrease"> - </button>
+
+</body>
+
+<script>
+    //================================================================//
+    //================================================================//
+
+    const randomColor = function () {
+        const hex = "0123456789ABCDEF";
+        let color = "#";
+
+        for (let i = 0; i < 6; i++) {
+            color += hex[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    const body = document.querySelector('body');
+    let intervalId;
+
+    const btnStart = document.querySelector('#btnStart');
+    btnStart.addEventListener('click', function () {
+        if (!intervalId) {
+            intervalId = setInterval(function () {
+                body.style.backgroundColor = randomColor();
+            }, 1000);
+        }
+    });
+
+    const btnStop = document.querySelector('#btnStop');
+    btnStop.addEventListener('click', function() {
+        clearInterval(intervalId);
+        intervalId = null;
+    });
+
+    //================================================================//
+    //================================================================//
+
+    const allDivs = document.querySelectorAll('.flex-container > div');
+    // console.log(allDivs);
+    allDivs.forEach(function (item) {
+        let color = item.getAttribute('data-color');
+        item.addEventListener('click', function () {
+            if(intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+            let color = this.getAttribute('data-color');
+            document.querySelector('body').style.backgroundColor = `${color}`;
+        });
+    });
+
+    //================================================================//
+    //================================================================//
+
+    const clock = document.querySelector('#clock');
+    setInterval(() => {
+        clock.innerHTML = new Date().toLocaleTimeString();
+    }, 1000);
+
+    //================================================================//
+    //================================================================//
+
+    let inputDefVal = 0;
+    const inputNumber = document.querySelector('#number');
+
+    function increaseNum(inputNumber) {
+        let num = inputNumber.value;
+        if(isNaN(num) || num < 0 || num == '') {
+            alert('Please enter a valid number.');
+            num = 0;
+            inputNumber.focus();
+            return false;
+        } else {
+            return parseInt(num) + 1;
+        }
+    }
+
+    const increase = document.querySelector('#increase');
+    increase.addEventListener('click', function () {
+        inputNumber.value = increaseNum(inputNumber);
+    });
+    
+    function decreaseNum(inputNumber) {
+        let num = inputNumber.value;
+        if(isNaN(num) || num < 0 || num == '') {
+            alert('Please enter a valid number.');
+            num = 0;
+            inputNumber.focus();
+            return false;
+        } else {
+            if(num > 0) {
+                return num - 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+    
+    const decrease = document.querySelector('#decrease');
+    decrease.addEventListener('click', function () {
+        inputNumber.value = decreaseNum(inputNumber);
+    });
+
+    </script>
+</html>
