@@ -1,11 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>02-Basic</title>
-</head>
-<body>
-    
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>02-Basic</title>
+    </head>
+    <body>
+        <table id="userData" width="100%" border="1">
+            <thead>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Website</th>
+                <th>Company</th>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        
+    </body>
+    <script>
+        // Create a promise
+        const reqPromise = new Promise(function(resolve, reject) {
+            setTimeout(function() {
+                console.log("Async task is compelete");
+                resolve();
+            }, 1000);
+        });
+
+        // Now Consume promise
+        reqPromise.then(function(){
+            console.log("Promise consumed");
+        })
+
+        //=========================Fetch API POST method============================//
+        // fetch(url, { method: 'POST', headers: {'Content-Type': 'application/json',}, body: JSON.stringify({title: 'foo', username: 'test'}) })
+        // .then(response => response.json())
+        // .then(data => console.log(data))
+        // .catch(error => console.error('Error:', error));
+
+        
+        // fetch with .then() method
+        let apiUrl = "https://jsonplaceholder.typicode.com/users";
+        fetch(apiUrl)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(data) {
+            console.log(data);
+        })
+        .catch(function(error) {
+            console.log(error);
+        })
+        .finally(function() {
+            console.log("The promise is either resolved or rejected")
+        })
+
+        // fetch with async/await method (modern way)
+        async function getData() {
+            try {
+                const response = await fetch("https://jsonplaceholder.typicode.com/users");
+                const data = await response.json();
+                console.log(data);
+                return data; // returns a Promise that resolves to 'data'
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        // getData();
+
+        //=============Put user data to table =====================//
+        // const table = document.querySelector('#userDate');
+        const table = document.querySelector('#userData');
+        const tbody = table.querySelector('tbody');
+        getData().then(function(result) {
+            console.log(result);
+            result.forEach(function(element) {
+                console.log(element);
+
+                let {street, suite, city, zipcode} = element.address;
+
+                // Create a new row
+                const newRow = document.createElement('tr');
+                
+                newRow.innerHTML = `
+                    <td>${element.id}</td>
+                    <td>${element.name}</td>
+                    <td>${element.username}</td>
+                    <td>${element.email}</td>
+                    <td>${street}, ${suite}, ${city}, ${zipcode}</td>
+                    <td>${element.phone}</td>
+                    <td>${element.website}</td>
+                    <td>${element.company.name}, ${element.company.catchPhrase}</td>
+                `;
+                tbody.appendChild(newRow);
+            });
+        });
+    </script>
 </html>
